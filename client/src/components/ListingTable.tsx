@@ -24,7 +24,7 @@ interface Listing {
 
 export default function MyListingsTable() {
   const [listingsData, setListingsData] = useState<Listing[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [, setIsLoading] = useState(true);
 
   // Fetch data when component mounts
   useEffect(() => {

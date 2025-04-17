@@ -1,6 +1,6 @@
-# CSCI334 - Service Finder App
+# CSIT314 - Event Management System
 
-A **Service Finder App** built with **React**, **TypeScript**, and **Vite**, styled using **Tailwind CSS**. The project was initialized with `npm create vite@latest`.
+A **Event Management System** built with **React**, **TypeScript**, and **Vite**, styled using **Tailwind CSS**. The project was initialized with `npm create vite@latest`.
 
 ## Features
 

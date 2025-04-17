@@ -121,7 +121,7 @@ export default function Auth() {
                       <span className="flex items-center justify-center w-8 h-8 bg-blue-600 text-white rounded">
                         <Fingerprint />
                       </span>
-                      <span className="ml-2 text-3xl font-medium text-white dark:text-white">Service Finder App</span>
+                      <span className="ml-2 text-3xl font-medium text-white dark:text-white">Event Management</span>
                     </Link>
                   </div>
                   <p className="text-center text-gray-400 dark:text-white/60">

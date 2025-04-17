@@ -14,7 +14,7 @@ const DashboardHeader: React.FC = () => { // Fixed `False` to `false`
           <Fingerprint />
         </span>
         <span className="ml-2 text-xl font-medium text-gray-900 dark:text-white">
-          Service Finder App
+          Event Management System
         </span>
         </Link>
       </div>
