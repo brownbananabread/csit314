@@ -95,18 +95,17 @@ public class UserController {
         return Response.Ok(user);
     }
 
-    @GetMapping("/users")
-    public ResponseEntity<?> getAllUsers(@CookieValue(name = "accessToken") String accessToken, 
-                                         @RequestParam(required = false) String service) {
+    // @GetMapping("/users")
+    // public ResponseEntity<?> getAllUsers(@CookieValue(name = "accessToken") String accessToken, 
+    //                                      @RequestParam(required = false) String service) {
         
-        User user = request.getUserFromToken(accessToken);
-        if (user == null) { return Response.Unauthorized(); }
+    //     User user = request.getUserFromToken(accessToken);
+    //     if (user == null) { return Response.Unauthorized(); }
 
-        switch (user.getRole()) {
-            case "admin": return Response.Ok(userService.getAllUsers());
-            case "customer": return Response.Ok(userService.getSoleTraders(service));
-            case "soleTrader": return Response.Ok(userService.getSoleTraders(service));
-            default: return Response.Unauthorized();
-        }
-    }
+    //     switch (user.getRole()) {
+    //         case "customer": return Response.Ok(userService.getSoleTraders(service));
+    //         case "organiser": return Response.Ok(userService.getSoleTraders(service));
+    //         default: return Response.Unauthorized();
+    //     }
+    // }
 }

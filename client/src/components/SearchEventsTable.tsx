@@ -10,44 +10,44 @@ import { fetchRequest } from "../utils/fetchRequest";
 import Badge from "./ui/Badge";
 import { useState, useEffect } from "react";
 
-interface Quote {
-  quoteId: number;
-  listingId: number;
-  soleTraderId: number;
-  customerId: number;
+interface Event {
+  eventId: number;
+  organiser: number;
+  title: string;
   description: string;
-  price: number;
-  date: string;
-  status: string;
-  createdAt: string;
+  eventType: string;
+  status: "upcoming" | "completed" | "cancelled";
+  location: string;
+  date: string; // ISO string format
+  createdAt: string; // ISO string format
 }
 
-export default function QuotesTable() {
-  const [quotesData, setQuotesData] = useState<Quote[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+export default function EventsTable() {
+  const [eventsData, setEventsData] = useState<Event[]>([]);
+  const [, setIsLoading] = useState(true);
 
   // Fetch data when component mounts
   useEffect(() => {
-    const fetchQuotes = async () => {
+    const fetchEvents = async () => {
       try {
         setIsLoading(true);
         const { body, status } = await fetchRequest({
           method: "GET",
-          url: "http://localhost:5174/api/quotes",
+          url: "http://localhost:5174/api/all-events",
         });
-        console.log("Fetched quotes:", body);
-        
+        console.log("Fetched events:", body);
+
         if (status === 200) {
-          setQuotesData(body);
+          setEventsData(body);
         }
       } catch (error) {
-        console.error("Failed to fetch quotes:", error);
+        console.error("Failed to fetch events:", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchQuotes();
+    fetchEvents();
   }, []);
 
   return (
@@ -58,7 +58,17 @@ export default function QuotesTable() {
             {/* Table Header */}
             <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
               <TableRow>
-                {["Quote ID", "Listing ID", "Trader ID", "Description", "Price", "Date", "Status"].map((column) => (
+                {[
+                  "Event ID",
+                  "Organiser ID",
+                  "Title",
+                  "Description",
+                  "Event Type",
+                  "Status",
+                  "Location",
+                  "Date",
+                  "Created At",
+                ].map((column) => (
                   <TableCell
                     key={column}
                     isHeader
@@ -69,38 +79,56 @@ export default function QuotesTable() {
                 ))}
               </TableRow>
             </TableHeader>
-  
+
             {/* Table Body */}
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {quotesData.map((quote) => (
-                <TableRow key={quote.quoteId}>
+              {eventsData.map((event) => (
+                <TableRow key={event.eventId}>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {quote.quoteId}
+                    {event.eventId}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {quote.listingId}
+                    {event.organiser}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {quote.soleTraderId}
+                    {event.title}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {quote.description}
+                    {event.description}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    ${quote.price.toFixed(2)}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {new Date(quote.date).toLocaleDateString()}
+                    {event.eventType}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                     <Badge
                       size="sm"
                       color={
-                        quote.status === "accepted" ? "success" : "warning"
+                        event.status === "completed"
+                          ? "success"
+                          : event.status === "cancelled"
+                          ? "error"
+                          : "warning"
                       }
                     >
-                      {quote.status}
+                      {event.status}
                     </Badge>
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                    {event.location}
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                    {new Date(event.date).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                    {new Date(event.createdAt).toLocaleString()}
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                    <button
+                      className="px-3 py-1 text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      onClick={() => alert(`Registering for event ID: ${event.eventId}`)}
+                    >
+                      Register
+                    </button>
                   </TableCell>
                 </TableRow>
               ))}

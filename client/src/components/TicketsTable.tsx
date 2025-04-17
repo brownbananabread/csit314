@@ -10,44 +10,43 @@ import { fetchRequest } from "../utils/fetchRequest";
 import Badge from "./ui/Badge";
 import { useState, useEffect } from "react";
 
-interface Listing {
-  listingId: number;
+interface Ticket {
+  ticketId: number;
+  eventId: number;
   customerId: number;
-  title: string;
-  description: string;
+  ticketType: "free" | "standard" | "premium";
+  status: "rejected" | "registered" | "payment_pending" | "confirmed";
   price: number;
-  location: string;
-  category: string;
-  serviceRequired?: string;
-  status?: string;
+  purchaseDate: string; // ISO string format
+  notes: string | null;
 }
 
-export default function MyListingsTable() {
-  const [listingsData, setListingsData] = useState<Listing[]>([]);
+export default function TicketsTable() {
+  const [ticketsData, setTicketsData] = useState<Ticket[]>([]);
   const [, setIsLoading] = useState(true);
 
   // Fetch data when component mounts
   useEffect(() => {
-    const fetchListings = async () => {
+    const fetchTickets = async () => {
       try {
         setIsLoading(true);
         const { body, status } = await fetchRequest({
           method: "GET",
-          url: "http://localhost:5174/api/listings",
+          url: "http://localhost:5174/api/tickets",
         });
-        console.log("Fetched listings:", body);
-        
+        console.log("Fetched tickets:", body);
+
         if (status === 200) {
-          setListingsData(body);
+          setTicketsData(body);
         }
       } catch (error) {
-        console.error("Failed to fetch listings:", error);
+        console.error("Failed to fetch tickets:", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchListings();
+    fetchTickets();
   }, []);
 
   return (
@@ -58,7 +57,16 @@ export default function MyListingsTable() {
             {/* Table Header */}
             <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
               <TableRow>
-                {["ID", "CustomerID", "Title", "Description", "Service", "Status", "Location"].map((column) => (
+                {[
+                  "Ticket ID",
+                  "Event ID",
+                  "Customer ID",
+                  "Ticket Type",
+                  "Status",
+                  "Price",
+                  "Purchase Date",
+                  "Notes",
+                ].map((column) => (
                   <TableCell
                     key={column}
                     isHeader
@@ -69,36 +77,45 @@ export default function MyListingsTable() {
                 ))}
               </TableRow>
             </TableHeader>
-  
+
             {/* Table Body */}
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {listingsData.map((listing) => (
-                <TableRow key={listing.listingId}>
+              {ticketsData.map((ticket) => (
+                <TableRow key={ticket.ticketId}>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {listing.listingId}
+                    {ticket.ticketId}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {listing.customerId}
+                    {ticket.eventId}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {listing.title}
+                    {ticket.customerId}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {listing.description}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {listing.serviceRequired}
+                    {ticket.ticketType}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                     <Badge
                       size="sm"
-                      color={listing.status === "complete" ? "success" : "warning"}
+                      color={
+                        ticket.status === "confirmed"
+                          ? "success"
+                          : ticket.status === "rejected"
+                          ? "error"
+                          : "warning"
+                      }
                     >
-                      {listing.status}
+                      {ticket.status}
                     </Badge>
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {listing.location}
+                    ${ticket.price.toFixed(2)}
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                    {new Date(ticket.purchaseDate).toLocaleString()}
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                    {ticket.notes || "N/A"}
                   </TableCell>
                 </TableRow>
               ))}

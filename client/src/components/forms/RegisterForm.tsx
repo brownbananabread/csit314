@@ -37,9 +37,9 @@ export default function RegisterForm({
     <form onSubmit={onSubmit}>
       <div className="mb-8 flex items-center gap-8">
         <Switch
-          label="Are you registering as a Sole Trader?"
+          label="Are you registering as an Organiser?"
           color="gray"
-          onChange={(checked) => setRole(checked ? "soleTrader" : "regular")}
+          onChange={(checked) => setRole(checked ? "organiser" : "customer")}
         />
       </div>
       <div className="mb-5">

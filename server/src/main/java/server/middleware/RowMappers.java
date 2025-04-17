@@ -4,29 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.lang.NonNull;
 import org.springframework.jdbc.core.RowMapper;
-import server.models.Listing;
+import server.models.Event;
+import server.models.Ticket;
 import server.models.User;
-import server.models.Quote;
-import server.models.Rating;
-
 
 public class RowMappers {
-    public static final class ListingRowMapper implements RowMapper<Listing> {
-        @Override
-        public Listing mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
-            return new Listing(
-                        rs.getInt("listingId"),
-                        rs.getInt("customerId"),
-                        rs.getString("title"),
-                        rs.getString("description"),
-                        rs.getString("serviceRequired"),
-                        rs.getString("status"),
-                        rs.getString("location"),
-                        rs.getString("createdAt")
-                    );
-        }
-    }
-    
     private static final class UserRowMapper implements RowMapper<User> {
         @Override
         public User mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
@@ -43,51 +25,51 @@ public class RowMappers {
             );
         }
     }
-    
-    private static final class QuoteRowMapper implements RowMapper<Quote> {
+
+    private static final class EventRowMapper implements RowMapper<Event> {
         @Override
-        public Quote mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
-            return new Quote(
-                        rs.getInt("quoteId"),
-                        rs.getInt("listingId"),
-                        rs.getInt("customerId"),
-                        rs.getInt("soleTraderId"),
-                        rs.getString("description"),
-                        rs.getDouble("price"),
-                        rs.getDate("date"),
-                        rs.getString("status"),
-                        rs.getDate("createdAt")
-                    );
+        public Event mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
+            return new Event(
+                rs.getInt("eventId"),
+                rs.getInt("organiserId"),
+                rs.getString("title"),
+                rs.getString("description"),
+                rs.getString("eventType"),
+                rs.getString("status"),
+                rs.getString("location"),
+                rs.getDate("date"),
+                rs.getDate("createdAt")
+            );
         }
     }
 
-    private static final class RatingRowMapper implements RowMapper<Rating> {
-        @Override
-        public Rating mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
-            return new Rating(
-                        rs.getInt("ratingId"),
-                        rs.getInt("receiverId"),
-                        rs.getInt("senderId"),
-                        rs.getInt("rating"),
-                        rs.getString("description"),
-                        rs.getDate("createdAt")
-                    );
+    private static final class TicketRowMapper implements RowMapper<Ticket> {
+    @Override
+    public Ticket mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
+            return new Ticket(
+                rs.getInt("ticketId"),
+                rs.getInt("eventId"),
+                rs.getInt("customerId"),
+                rs.getString("ticketType"),
+                rs.getString("status"),
+                rs.getFloat("price"),
+                rs.getTimestamp("purchaseDate"),
+                rs.getString("notes")
+            );
         }
     }
-    
-    public static RowMapper<Rating> getRatingRowMapper() {
-        return new RatingRowMapper();
+
+    public static RowMapper<Ticket> getTicketRowMapper() {
+        return new TicketRowMapper();
     }
 
-    public static RowMapper<Listing> getListingRowMapper() {
-        return new ListingRowMapper();
+
+    public static RowMapper<Event> getEventRowMapper() {
+        return new EventRowMapper();
     }
-    
+
     public static RowMapper<User> getUserRowMapper() {
         return new UserRowMapper();
     }
     
-    public static RowMapper<Quote> getQuoteRowMapper() {
-        return new QuoteRowMapper();
-    }
 }

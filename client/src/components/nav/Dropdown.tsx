@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useProfile } from "../../context/ProfileContext";
-import { Menu, X } from "lucide-react";
-import { CustomerMembership, SoleTraderMembership, AdminMembership } from "../ui/Membership";
-import { GridIcon } from "lucide-react";
+import { Menu, X, Search, LayoutDashboard, BadgePlus } from "lucide-react";
+import { CustomerMembership, OrganiserMembership } from "../ui/Membership";
 
 export default function DashboardDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,21 +34,53 @@ export default function DashboardDropdown() {
                   {profile ? email : "Loading..."}
                 </span>
               </div>
-                {profile?.role === "soleTrader" ? <SoleTraderMembership /> : 
-                 profile?.role === "admin" ? <AdminMembership /> : 
-                 <CustomerMembership />}
+                {profile?.role === "organiser" ? <OrganiserMembership /> : <CustomerMembership />}
             </div>
-
-            <li className="my-2 border-t border-gray-200 dark:border-gray-700" />
             <li>
+                <a
+                  href="/dashboard"
+                  onClick={closeDropdown}
+                  className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+                >
+                  <span className="text-gray-500">
+                    <LayoutDashboard size={18} />
+                  </span>
+                  Dashboard
+                </a>
+
+              {profile?.role === "customer" && (
+                <a
+                  href="/search-events"
+                  onClick={closeDropdown}
+                  className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+                >
+                    <span className="text-gray-500">
+                    <Search size={18} />
+                    </span>
+                  Search Events
+                </a>
+              )}
+              {profile?.role === "organiser" && (
+                <a
+                  href="/create-event"
+                  onClick={closeDropdown}
+                  className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+                >
+                    <span className="text-gray-500">
+                    <BadgePlus size={18} />
+                    </span>
+                  Create Event
+                </a>
+              )}
+                <hr className="my-2 border-gray-200 dark:border-gray-700" />
               <a
               href="/authentication"
               onClick={closeDropdown}
               className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
               >
-              <span className="text-gray-500">
-                <GridIcon size={18} />
-              </span>
+                <span className="text-gray-500">
+                <X size={18} />
+                </span>
               Log Out
               </a>
             </li>
